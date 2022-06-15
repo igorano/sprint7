@@ -12,15 +12,22 @@ public class HomePage {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
-    @FindBy(how = How.CSS, using = "button.single_add_to_cart_button")
-    private WebElement btn_AddToCart;
+    @FindBy(how = How.ID, using = "my_account")
+    private WebElement myAccount;
+    @FindBy(how = How.XPATH, using = "//a[@href ='/user/myaccount']")
+    private WebElement account;
 
-    public void perform_Search(String search) {
-        driver.navigate().to("https://shop.demoqa.com/?s=" + search + "&post_type=product");
+
+    public void clickMyAccount() {
+       myAccount.click();
+    }
+
+    public void clickAccount() {
+        account.click();
     }
 
     public void navigateTo_HomePage() {
-        driver.get("https://www.shop.demoqa.com");
+        driver.get("https://www.emag.bg/homepage");
     }
 
 }
