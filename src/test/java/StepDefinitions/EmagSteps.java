@@ -9,10 +9,12 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Given;
+import pageObjects.LoginPage;
 
 public class EmagSteps {
     WebDriver driver;
     HomePage homePage;
+    LoginPage loginPage;
     PageObjectManager pageObjectManager;
     @Given("Login into emag")
     public void loginIntoEmag() {
@@ -26,11 +28,10 @@ public class EmagSteps {
     @And("Login existing account successfully")
     public void loginExistingAccountSuccessfully() {
         homePage.clickMyAccount();
-        homePage.clickAccount();
     }
 
     @And("Search for a product in the search field")
-    public void searchForAProductInTheSearchField() {
+    public void searchForAProductInTheSearchField() throws InterruptedException {
     }
 
     @And("Search in the category")
