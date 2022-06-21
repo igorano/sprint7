@@ -1,5 +1,4 @@
 package pageObjects;
-import io.netty.util.Timeout;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,14 +8,13 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.beans.Visibility;
 import java.time.Duration;
 
-public class HomePage {
+public class HomePageEmag {
     WebDriver driver;
     WebDriverWait wait;
 
-    public HomePage(WebDriver driver) {
+    public HomePageEmag(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }

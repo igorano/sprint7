@@ -1,26 +1,21 @@
 package managers;
 
 import org.openqa.selenium.WebDriver;
-import pageObjects.HomePage;
-import pageObjects.LoginPage;
+import pageObjects.HomePageBard;
+import pageObjects.HomePageEmag;
 
 public class PageObjectManager {
-    private WebDriver driver;
-    private HomePage homePage;
-    private LoginPage loginPage;
+    private final WebDriver driver;
+    private HomePageEmag homePageEmag;
+    private HomePageBard homePageBard;
 
     public PageObjectManager(WebDriver driver) {
         this.driver = driver;
     }
-    public HomePage getHomePage(){
-
-        return (homePage == null) ? homePage = new HomePage(driver) : homePage;
-
+    public HomePageEmag getEmagHomePage(){
+        return (homePageEmag == null) ? homePageEmag = new HomePageEmag(driver) : homePageEmag;
     }
-
-    public LoginPage getLoginPage(){
-
-        return (loginPage == null) ? loginPage = new LoginPage(driver) : loginPage;
-
+    public HomePageBard getBardHomePage(){
+        return (homePageBard == null) ? homePageBard = new HomePageBard(driver) : homePageBard;
     }
 }
