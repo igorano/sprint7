@@ -1,10 +1,11 @@
 Feature: API testing
-  Background:
-    Given go to base url
 
-  Scenario: Create an entry in the DB
-    When create post request
-    Then view the entry in DB
+  Background:
+    Given go to url
+
+  Scenario: Check SOAP request
+    When create request
+    Then check response
 
   Scenario: Retrieve information from the DB
     When create get request

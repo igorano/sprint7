@@ -12,18 +12,28 @@ import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
 import managers.PageObjectManager;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pageObjects.HomePageBard;
 import pageObjects.HomePageEmag;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.Duration;
 
 public class Steps {
     private static final String BASE_URL = "https://dummy.restapiexample.com/api/v1/";
+    private static final String SOAP_URL = "http://www.dneonline.com/calculator.asmx?WSDL";
     WebDriver driver;
     HomePageBard homePageBard;
     HomePageEmag homePageEmag;
@@ -33,8 +43,12 @@ public class Steps {
     private static Response response;
     private static ResponseBody body;
 
+    File soapRequest;
+    CloseableHttpClient client;
+    HttpPost request;
+
     @Before
-    public  void setUp() {
+    public void before_all() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.manage().window().maximize();
@@ -96,7 +110,7 @@ public class Steps {
         homePageEmag.searchInConstructors();
     }
     @After()
-    public void quit(){
+    public void tearDown(){
         driver.quit();
     }
 
@@ -149,5 +163,49 @@ public class Steps {
         String body = response.getBody().asString();
         System.out.println(body);
         Assert.assertTrue(body.contains("Record has been deleted"));
+    }
+
+    @When("Get a particular employee")
+    public void getAParticularEmployee() {
+
+        RestAssured.baseURI = BASE_URL + "employee/1";
+        RequestSpecification request = RestAssured.given();
+        response = request.get();
+    }
+
+    @When("get non existing employee")
+    public void getNonExistingEmployee() {
+        RestAssured.baseURI = BASE_URL + "employee/-1";
+        RequestSpecification request = RestAssured.given();
+        response = request.get();
+    }
+
+    @When("creating already existing employee")
+    public void creatingAlreadyExistingEmployee() {
+        RestAssured.baseURI = BASE_URL + "create/1";
+        RequestSpecification request = RestAssured.given();
+        response = request.get();
+    }
+
+    @Given("go to url")
+    public void goToUrl() throws IOException {
+        soapRequest = new File("soap.xml");
+        client = HttpClients.createDefault();
+    }
+
+    @When("create request")
+    public void createRequest() throws FileNotFoundException {
+        request = new HttpPost(SOAP_URL);
+        request.addHeader("Content-Type", "text/xml");
+        request.setEntity(new InputStreamEntity(new FileInputStream(soapRequest)));
+    }
+
+    @Then("check response")
+    public void checkResponse() throws IOException {
+        CloseableHttpResponse resp = client.execute(request);
+        int statusCode = resp.getStatusLine().getStatusCode();
+        var response = EntityUtils.toString(resp.getEntity());
+        Assert.assertTrue(response.contains("2"));
+        Assert.assertEquals(200, statusCode);
     }
 }
