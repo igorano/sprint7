@@ -1,37 +1,20 @@
-Feature: API testing
+Feature: SOAP testing
 
   Background:
     Given go to url
 
-  Scenario: Check SOAP request
-    When create request
-    Then check response
+  Scenario: Check SOAP add request
+    When create add request
+    Then assert response content
 
-  Scenario: Retrieve information from the DB
-    When create get request
-    Then retrieve information from the DB
+  Scenario: Check SOAP divide request
+    When create divide request
+    Then assert response content
 
-  Scenario: Edit an entry in the DB
-    When create post request
-    Then edit an entry in the DB
+  Scenario: Check SOAP multiply request
+    When  create multiply request
+    Then assert response content
 
-  Scenario: Delete an entry
-    When create delete request
-    Then delete an entry
-
-  Scenario: Get a particular employee
-    When Get a particular employee
-    Then retrieve information from the DB
-
-  Scenario: Get all employees
-    When create get request
-    Then retrieve information from the DB
-
-  Scenario: Error message when getting non existing employee
-    When get non existing employee
-    Then retrieve information from the DB
-
-  Scenario: Error message when creating already existing employee
-    When creating already existing employee
-    Then retrieve information from the DB
-
+  Scenario: Check SOAP subtract request
+    When create subtract request
+    Then assert response content

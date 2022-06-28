@@ -1,7 +1,6 @@
 package StepDefinitions;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
+import io.cucumber.java.AfterAll;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -9,7 +8,6 @@ import io.cucumber.java.en.When;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
 import managers.PageObjectManager;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -19,6 +17,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -41,13 +40,11 @@ public class Steps {
     PageObjectManager pageObjectManager;
 
     private static Response response;
-    private static ResponseBody body;
 
-    File soapRequest;
     CloseableHttpClient client;
     HttpPost request;
 
-    @Before
+    @BeforeAll
     public void before_all() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
@@ -109,7 +106,7 @@ public class Steps {
     public void checkoutAllLegoHarryPotter(){
         homePageEmag.searchInConstructors();
     }
-    @After()
+    @AfterAll()
     public void tearDown(){
         driver.quit();
     }
@@ -189,19 +186,39 @@ public class Steps {
 
     @Given("go to url")
     public void goToUrl() throws IOException {
-        soapRequest = new File("soap.xml");
         client = HttpClients.createDefault();
-    }
-
-    @When("create request")
-    public void createRequest() throws FileNotFoundException {
         request = new HttpPost(SOAP_URL);
         request.addHeader("Content-Type", "text/xml");
-        request.setEntity(new InputStreamEntity(new FileInputStream(soapRequest)));
+
     }
 
-    @Then("check response")
-    public void checkResponse() throws IOException {
+    @When("create add request")
+    public void createAddRequest() throws FileNotFoundException {
+        File soapAddRequest = new File("src\\SoapFiles\\Add.xml");
+        request.setEntity(new InputStreamEntity(new FileInputStream(soapAddRequest)));
+    }
+
+    @When("create divide request")
+    public void createDivideRequest() throws FileNotFoundException {
+        File soapDivideRequest = new File("src\\SoapFiles\\Divide.xml");
+        request.setEntity(new InputStreamEntity(new FileInputStream(soapDivideRequest)));
+    }
+
+    @When("create multiply request")
+    public void createMultiplyRequest() throws FileNotFoundException {
+        File soapMultiplyRequest = new File("src\\SoapFiles\\Multiply.xml");
+        request.setEntity(new InputStreamEntity(new FileInputStream(soapMultiplyRequest)));
+    }
+
+    @When("create subtract request")
+    public void createSubtractRequest() throws FileNotFoundException {
+        File soapSubtractRequest = new File("src\\SoapFiles\\Subtract.xml");
+        request.setEntity(new InputStreamEntity(new FileInputStream(soapSubtractRequest)));
+    }
+
+
+    @Then("assert response content")
+    public void assertResponseContent() throws IOException {
         CloseableHttpResponse resp = client.execute(request);
         int statusCode = resp.getStatusLine().getStatusCode();
         var response = EntityUtils.toString(resp.getEntity());
